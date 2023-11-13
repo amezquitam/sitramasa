@@ -1,7 +1,9 @@
+import jwt from 'jsonwebtoken'
 import express from 'express'
-import UserService from '../services/UserService'
+import UserService from '../services/UserService.js'
+import RoleService from '../services/RoleService.js'
 
-import { sign } from 'jsonwebtoken'
+
 
 const AuthController = express.Router()
 
@@ -9,26 +11,38 @@ const AuthController = express.Router()
 AuthController.post('/', async (req, res) => {
     const { username, password } = req.body
 
-    const user = await UserService.get(username)
+    const user = await UserService.getByUsername(username)
 
     if (!user) {
-        return res.sendStatus(401)
+        return res.status(401).send({ message: 'Invalid credentials' })
     }
 
     if (user.username !== username || user.password !== password) {
-        return res.sendStatus(401)
+        return res.status(401).send({ message: 'Incorrect credentials' })
     }
 
+    const role = await RoleService.get(user.role_id)
 
-    const token = sign({
-        // expires in 30 days
-        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
-        username
-    }, process.env.jwtSecret)
-
-    res.cookie('auth-token', w)
-
+    const token = jwt.sign({ username }, process.env.jwtSecret, { expiresIn: '1h' })
+    res.send({ token, role: role.name })
 })
+
+
+export const VerifyToken = (req, res, next) => {
+    const token = req.headers.authorization
+
+    if (!token) {
+        return res.status(403).json({ message: 'Token required' });
+    }
+
+    jwt.verify(token, process.env.jwtSecret, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ message: 'Invalid token' });
+        }
+        req.user = decoded;
+        next();
+    });
+}
 
 
 export default AuthController

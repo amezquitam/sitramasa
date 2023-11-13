@@ -1,10 +1,11 @@
 import express from 'express'
 import UserService from '../services/UserService.js'
+import { VerifyToken } from './AuthController.js'
 
 const UserController = express.Router()
 
 
-UserController.get('/:id', async (req, res) => {
+UserController.get('/:id', VerifyToken, async (req, res) => {
     const { id } = req.params
     const possibleUser = await UserService.get(id)
     if (!possibleUser) {

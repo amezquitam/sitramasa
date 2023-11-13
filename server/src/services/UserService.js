@@ -49,6 +49,7 @@ const UserService = {
         try {
             await pool.query(query, values)
         } catch (err) {
+            console.error(err)
             return false
         }
 
