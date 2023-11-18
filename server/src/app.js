@@ -25,7 +25,7 @@ server.use(cookieParser( process.env.jwtSecret ))
 server.disable('x-powered-by')
 
 // API routes configuration
-server.use('/api', router)
+server.use('/', router)
 
 // Wait for requests
 server.listen(appPort)

@@ -3,7 +3,7 @@ import express from 'express'
 // internal routes
 import UserController from './UserController.js'
 import RoleController from './RoleController.js'
-import AuthController, { VerifyToken } from './AuthController.js'
+import AuthController from './AuthController.js'
 
 const router = express.Router()
 

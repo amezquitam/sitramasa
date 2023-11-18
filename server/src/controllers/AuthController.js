@@ -23,26 +23,58 @@ AuthController.post('/', async (req, res) => {
 
     const role = await RoleService.get(user.role_id)
 
-    const token = jwt.sign({ username }, process.env.jwtSecret, { expiresIn: '1h' })
+    const token = jwt.sign({ username, id: user.user_id, role: role.role_id }, process.env.jwtSecret, { expiresIn: '1h' })
+
+    res.cookie('authToken', token, {
+        maxAge: 60 * 60 * 24,
+        httpOnly: true,
+    })
+
     res.send({ token, role: role.name })
 })
 
 
-export const VerifyToken = (req, res, next) => {
-    const token = req.headers.authorization
+const PermissionTemplate = (roles) => (req, res, next) => {
+    const token = req.cookies.authToken
 
     if (!token) {
         return res.status(403).json({ message: 'Token required' });
     }
 
     jwt.verify(token, process.env.jwtSecret, (err, decoded) => {
-        if (err) {
+        if (err)
             return res.status(401).json({ message: 'Invalid token' });
-        }
+
+        console.log(decoded)
+        
+        if (!roles.includes(decoded.role))
+            return res.status(403).json({ message: 'Forbidden' })
+
         req.user = decoded;
         next();
-    });
+    })
+
 }
+
+
+export const RequireAdmin = PermissionTemplate([1])
+
+
+export const RequireSeller = PermissionTemplate([2])
+
+
+export const RequireBoatMan = PermissionTemplate([3])
+
+
+export const RequirePassenger = PermissionTemplate([4])
+
+
+export const RequireAny = PermissionTemplate([1, 2, 3, 4])
+
+
+AuthController.get('/', RequireAny, (req, res) => {
+    res.sendStatus(200)
+})
 
 
 export default AuthController

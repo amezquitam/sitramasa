@@ -1,10 +1,12 @@
 
 
-create or replace function has_role(_user_id integer, _rolename varchar)
+
+
+create or replace function has_role(_userId integer, _rolename varchar)
 returns boolean as $$
 begin
   return 
-	(select "role_id" from users where "user_id" = _user_id)
+	(select "role_id" from users where "userId" = _userId)
 	= (select "role_id" from roles where "name" = _rolename);
 end;
 $$ language plpgsql;
@@ -21,68 +23,72 @@ end;
 $$ language plpgsql;
 
 
-create table if not exists roles (
-	"role_id" serial primary key,
-	"name" varchar unique
-);
-
 create table if not exists users (
-	"user_id" serial primary key,
-	"role_id" integer not null,
+	"userId" serial primary key,
 	"firstname" varchar not null,
 	"lastname" varchar not null,
 	"username" varchar not null unique, 
-	"password" varchar not null,
-	foreign key ("role_id") references roles("role_id")
+	"password" varchar not null
+);
+
+create table if not exists admins (
+	"userId" integer primary key,
+	foreign key ("userId") references users("userId")
+);
+
+create table if not exists sellers (
+	"userId" integer primary key,
+	foreign key ("userId") references users("userId")
+);
+
+create table if not exists boatmans (
+	"userId" integer primary key,
+	foreign key ("userId") references users("userId")
+);
+
+create table if not exists public (
+	"userId" integer primary key,
+	foreign key ("userId") references users("userId")
 );
 
 create table if not exists boats (
-	"boat_id" serial primary key,
-	"boatman_id" integer not null,
+	"boatId" serial primary key,
+	"boatmanId" integer not null,
 	"name" varchar not null,
 	"capacity" integer not null,
-	foreign key ("boatman_id") references users("user_id"),
-	check ("capacity" > 0),
-	check (has_role("boatman_id", 'lanchero'))
+	check ("capacity" > 0)
+	foreign key ("boatmanId") references users("userId"),
 );
 
 create table if not exists docks (
-	"dock_id" serial primary key,
-	"place" varchar not null unique
-);
-
-create table if not exists routes (
-	"route_id" serial primary key,
-	"dock_origin" integer not null,
-	"dock_destiny" integer not null,
-	foreign key ("dock_origin") references docks("dock_id"),
-	foreign key ("dock_destiny") references docks("dock_id"),
-	check ("dock_origin" <> "dock_destiny"),
-	unique ("dock_origin", "dock_destiny")
+	"idDock" serial primary key,
+	"name" varchar not null unique
 );
 
 create table if not exists trips (
-	"trip_id" serial primary key,
-	"route_id" integer not null,
-	"boat_id" integer not null,
+	"tripId" serial primary key,
+	"startDock" integer not null,
+	"endDock" integer not null,
 	"datetime" timestamp not null,
-	foreign key ("route_id") references routes("route_id"),
-	foreign key ("boat_id") references boats("boat_id"),
-	unique ("boat_id", "datetime")
+	"boatId" integer not null,
+	"price" numeric(10, 2) not null,
+	foreign key ("startDock") references docks("idDock"),
+	foreign key ("endDock") references docks("idDock"),
+	foreign key ("boatId") references boats("boatId"),
+	unique ("boatId", "datetime"),
+	check ("startDock" <> "endDock")
 );
 
 create table if not exists tickets (
-	"ticket_id" serial primary key,
+	"ticketId" serial primary key,
 	"vip" boolean not null,
 	"people" integer not null,
-	"paid_price" numeric(10, 2) not null,
-	"normal_price" numeric(10, 2) not null,
 	"purchased_at" timestamp not null,
 	"trip_id" integer not null,
 	"seller_id" integer not null,
 	"passenger_id" integer not null,
-	foreign key (seller_id) references users(user_id),
-	foreign key (passenger_id) references users(user_id),
+	foreign key (seller_id) references users(userId),
+	foreign key (passenger_id) references users(userId),
 	foreign key (trip_id) references trips(trip_id),
 	check (has_role("seller_id", 'Vendedor')),
 	check (has_role("passenger_id", 'Pasajero')),

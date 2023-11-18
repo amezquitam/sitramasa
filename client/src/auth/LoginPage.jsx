@@ -19,17 +19,17 @@ export default function LoginPage() {
         <h2>Login</h2>
         <form className="form" onSubmit={handleSubmit(AuthProvider.signIn)}>
 
-          {errors.username && <p> {errors.username.message} </p>}
+          {errors.username && <p className='error'> {errors.username.message} </p>}
           <div className="form-group">
             <input {...register("username", { required: "Username is required", minLength: 2 })} autoComplete='off' placeholder="Nombre de usuario" />
           </div>
 
-          {errors.password && <p> {errors.password.message} </p>}
+          {errors.password && <p className='error'> {errors.password.message} </p>}
           <div className="form-group">
             <input {...register("password", { required: "Password must have at least 8 characters", minLength: 8 })} type='password' placeholder="Contraseña" />
           </div>
 
-          <span>¿Has olvidado tu contraseña?</span>
+          <span className='msg'>¿Has olvidado tu contraseña?</span>
           <br />
 
           <button type="submit" className="submit-button">Iniciar sessión</button>

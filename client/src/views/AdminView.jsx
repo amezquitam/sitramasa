@@ -1,8 +1,9 @@
 
 function AdminView() {
-    return (
-      <div>AdminView</div>
-    )
-  }
-  
-  export default AdminView
+  return (
+    <div className="AppGlass">
+    </div>
+  )
+}
+
+export default AdminView

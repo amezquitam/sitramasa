@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form"
 import AuthProvider from "./AuthProvider"
-
+import PropTypes from 'prop-types'
 
 export default function RegisterPage({ setShowRegist }) {
 
@@ -12,19 +12,19 @@ export default function RegisterPage({ setShowRegist }) {
                 <h2>Regístrate</h2>
                 <form className="form" onSubmit={handleSubmit(AuthProvider.signUp)} id="reg-form">
                     <div className="form-group">
-                        <input {...register("firstname", { required: true, minLength: 2 })} placeholder="Primer nombre" />
+                        <input {...register("firstname", { required: true, minLength: 2 })} autoComplete="off" name="firstname" placeholder="Primer nombre" />
                     </div>
 
                     <div className="form-group">
-                        <input {...register("lastname", { required: true, minLength: 3 })} placeholder="Primer apellido" />
+                        <input {...register("lastname", { required: true, minLength: 3 })} autoComplete="off" name="lastname" placeholder="Primer apellido" />
                     </div>
                     
                     <div className="form-group">
-                        <input {...register("username", { required: true, minLength: 3 })} placeholder="Nombre de usuario" autoComplete="off" />
+                        <input {...register("username", { required: true, minLength: 3 })} autoComplete="off" name="username" placeholder="Nombre de usuario" />
                     </div>
 
                     <div className="form-group">
-                        <input {...register("password", { required: true, minLength: 8 })} placeholder="Contraseña" type="password" />
+                        <input {...register("password", { required: true, minLength: 8 })} autoComplete="off" name="password" placeholder="Contraseña" type="password" />
                     </div>
 
                     <br />
@@ -39,6 +39,7 @@ export default function RegisterPage({ setShowRegist }) {
     )
 }
 
+
 RegisterPage.propTypes = {
-    setShowRegist: Function
+    setShowRegist: PropTypes.func.isRequired
 }
