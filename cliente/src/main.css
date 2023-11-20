@@ -1,0 +1,34 @@
+:root {
+    --auth-image: url('/res/img/pexels-pixabay-163872.jpg');
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url('/res/font/Poppins-Regular.ttf');
+}
+
+
+#auth-container {
+    width: 100vw;
+    min-height: 100vh;
+    overflow: hidden;
+    background-image: var(--auth-image);
+    background-size: cover;
+    background-position: top;
+    display: grid;
+    place-items: center;
+    position: relative;
+}
+
+#auth-container::before {
+    content: " ";
+    background-color: rgba(20, 17, 17, 0.226);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Poppins;
+}

@@ -9,7 +9,11 @@ const UserService = {
      * if not exists
      */
     get: async (userId) => {
-        const query = `select * from users where user_id = $1`
+        const query = `
+            select * 
+            from users 
+            where userId = $1
+        `
         const values = [userId]
 
         const result = await pool.query(query, values)
@@ -22,7 +26,11 @@ const UserService = {
      * if not exists
      */
     getByUsername: async (username) => {
-        const query = `select * from users where username = $1`
+        const query = `
+            select * 
+            from users 
+            where username = $1
+        `
         const values = [username]
 
         const result = await pool.query(query, values)
@@ -42,7 +50,7 @@ const UserService = {
      */
     create: async ({ firstname, lastname, username, password, roleId }) => {
 
-        const query = `insert into users (firstname, lastname, username, password, role_id)
+        const query = `insert into users (firstname, lastname, username, password, "roleId")
             values ($1, $2, $3, $4, $5)`
         const values = [firstname, lastname, username, password, roleId]
 

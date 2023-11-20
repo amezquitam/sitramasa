@@ -24,7 +24,7 @@ UserController.post('/', async (req, res) => {
     if (created)
         res.send({ message: 'user created succesfully' })
     else 
-        res.send({ message: 'an error has ocurred' })
+        res.status(400).send({ message: 'an error has ocurred' })
 })
 
 
