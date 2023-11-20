@@ -3,12 +3,12 @@ import pool from "../config/database.js"
 const RoleService = {
     // get all posible roles
     allRoles: async () => {
-        const result = await pool.query(`select * from roles`)
-        return result.rows
+        const { rows } = await pool.query(`select * from roles`)
+        return rows
     },
     get: async (id) => {
-        const result = await pool.query(`select * from roles where role_id = $1`, [id])
-        return result.rows[0]
+        const { rows } = await pool.query(`select * from roles where "roleId" = $1`, [id])
+        return rows[0]
     }
 }
 

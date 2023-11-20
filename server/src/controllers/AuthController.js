@@ -21,16 +21,20 @@ AuthController.post('/', async (req, res) => {
         return res.status(401).send({ message: 'Incorrect credentials' })
     }
 
-    const role = await RoleService.get(user.role_id)
+    const role = await RoleService.get(user.roleId)
 
-    const token = jwt.sign({ username, id: user.user_id, role: role.role_id }, process.env.jwtSecret, { expiresIn: '1h' })
+    const token = jwt.sign({ username, userId: user.user_id, role: role.name }, process.env.jwtSecret, { expiresIn: '1h' })
+
+    const expires = new Date(Date.now() + 1000 * 60 * 60)
 
     res.cookie('authToken', token, {
-        maxAge: 60 * 60 * 24,
+        expires,
         httpOnly: true,
+        secure: true,
+        sameSite: 'strict'
     })
 
-    res.send({ token, role: role.name })
+    res.send({ userId: user.user_id, username, role: role.name })
 })
 
 
@@ -44,8 +48,6 @@ const PermissionTemplate = (roles) => (req, res, next) => {
     jwt.verify(token, process.env.jwtSecret, (err, decoded) => {
         if (err)
             return res.status(401).json({ message: 'Invalid token' });
-
-        console.log(decoded)
         
         if (!roles.includes(decoded.role))
             return res.status(403).json({ message: 'Forbidden' })
@@ -57,23 +59,23 @@ const PermissionTemplate = (roles) => (req, res, next) => {
 }
 
 
-export const RequireAdmin = PermissionTemplate([1])
+export const RequireAdmin = PermissionTemplate(['Administrador'])
 
 
-export const RequireSeller = PermissionTemplate([2])
+export const RequireSeller = PermissionTemplate(['Vendedor'])
 
 
-export const RequireBoatMan = PermissionTemplate([3])
+export const RequireBoatMan = PermissionTemplate(['Lanchero'])
 
 
-export const RequirePassenger = PermissionTemplate([4])
+export const RequirePassenger = PermissionTemplate(['Pasajero'])
 
 
-export const RequireAny = PermissionTemplate([1, 2, 3, 4])
+export const RequireAny = PermissionTemplate(['Administrador', 'Vendedor', 'Lanchero', 'Pasajero'])
 
 
 AuthController.get('/', RequireAny, (req, res) => {
-    res.sendStatus(200)
+    res.status(200).send(req.user)
 })
 
 

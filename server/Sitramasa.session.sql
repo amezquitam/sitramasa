@@ -65,7 +65,7 @@ create table if not exists tickets (
 
 -- Data
 
-insert into docks ("name") values 
+insert into docks (place) values 
 	('Rodadero'),
 	('La Marina'),
 	('Taganga'),

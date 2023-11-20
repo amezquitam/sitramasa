@@ -1,8 +1,10 @@
+import pool from "../config/database.js"
 
 
 const DockService = {
-    allDocks: () => {
-
+    allDocks: async () => {
+        const { rows } = await pool.query(`select * from docks`)
+        return rows
     },
 }
 

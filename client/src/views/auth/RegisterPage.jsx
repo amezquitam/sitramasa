@@ -1,14 +1,14 @@
 import { useForm } from "react-hook-form"
-import AuthProvider from "./AuthProvider"
+import AuthProvider from "../../auth/AuthProvider"
 import PropTypes from 'prop-types'
+import GlassWrapper from '../common/GlassWrapper'
 
 export default function RegisterPage({ setShowRegist }) {
 
     const { register, handleSubmit } = useForm()
 
     return (
-        <div className="container">
-            <div className="form-wrapper">
+        <GlassWrapper>
                 <h2>Regístrate</h2>
                 <form className="form" onSubmit={handleSubmit(AuthProvider.signUp)} id="reg-form">
                     <div className="form-group">
@@ -34,8 +34,7 @@ export default function RegisterPage({ setShowRegist }) {
                     <span>¿Ya tienes una cuenta?</span>
                     <button onClick={() => setShowRegist(false)} className="submit-button">Iniciar sessión</button>
                 </form>
-            </div>
-        </div>
+        </GlassWrapper>
     )
 }
 

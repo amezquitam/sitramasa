@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+
+:root {
+  /* Colors */
+  --glass: #ffffff8a;
+  --main-bg: #343434;
+  /* Shadows */
+  --box-shadow: 0px 19px 60px #00000014;
+  --sandbox-shadow: -79px 51px 60px #00000014;
+}

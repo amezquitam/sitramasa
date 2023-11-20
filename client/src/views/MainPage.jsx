@@ -4,7 +4,7 @@ import BoatmanView from './BoatmanView'
 import PassengerView from './PassengerView'
 import SellerView from './SellerView'
 import AuthProvider from '../auth/AuthProvider'
-import LoginPage from '../auth/LoginPage'
+import LoginPage from './auth/LoginPage'
 import LoadingPage from './common/LoadingPage'
 import { useEffect, useState } from 'react'
 
